@@ -5,6 +5,15 @@
 var express = require("express");
 var app = express();
 
+//API endpoint for parsing
+app.use("/api/whoami", function(req, res, next) {
+  var ip = req.header("x-forwarded-for") || req.connection.remoteAddress;
+  var ips = ip.split(",");
+  var ipAddress = ips[0];
+  return res.json({ ipaddress: ipAddress });
+  next();
+});
+
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
 var cors = require("cors");
@@ -22,9 +31,6 @@ app.get("/", function(req, res) {
 app.get("/api/hello", function(req, res) {
   res.json({ greeting: "hello API" });
 });
-
-//API endpoint for parsing
-app.get("/api/whoami", function(req, res) {});
 
 // listen for requests :)
 var listener = app.listen(3000, function() {
