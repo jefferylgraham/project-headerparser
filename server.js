@@ -7,10 +7,22 @@ var app = express();
 
 //API endpoint for parsing
 app.use("/api/whoami", function(req, res, next) {
+  //parse ip address from x-forwarded-for header
   var ip = req.header("x-forwarded-for") || req.connection.remoteAddress;
   var ips = ip.split(",");
   var ipAddress = ips[0];
-  return res.json({ ipaddress: ipAddress });
+
+  //get langauge from Accept-Language header
+  var languages = req.header("Accept-Language");
+
+  //get user info from User-Agent header
+  var software = req.header("User-Agent");
+
+  return res.json({
+    ipaddress: ipAddress,
+    language: languages,
+    software: software
+  });
   next();
 });
 
